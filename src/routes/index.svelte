@@ -1,7 +1,17 @@
 <script>
     import {pokemon} from '../stores/pokestore'
     import PokemonCard from '../components/pokemonCard.svelte'
-console.log("pokemon",$pokemon);
+
+    let searchTerm = "";
+    let filteredPokemon = [];
+
+    $:{
+        if(searchTerm){
+            filteredPokemon = $pokemon.filter(pokeman => pokeman.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        }else{
+            filteredPokemon = [...$pokemon]
+        }
+    }
 </script>
 
 <svelte:head>
@@ -9,8 +19,10 @@ console.log("pokemon",$pokemon);
 </svelte:head>
 <h1>Svelte Kit Pokedex </h1>
 
+<input class="search" type="text" bind:value={searchTerm} placeholder="Search Pokemon">
+
 <div class="general col-4">
-{#each $pokemon as pokeman }
+{#each filteredPokemon as pokeman }
 
 <p> <PokemonCard {pokeman}></PokemonCard></p>
     
@@ -25,6 +37,15 @@ console.log("pokemon",$pokemon);
     }
     .general{
         display: grid;
-        grid-template-columns: auto auto auto;
+        grid-template-columns: auto auto;
+    }
+    .search{
+        width: 100%;
+        border-radius: 5px;
+        border-width: 2px;
+        font-size: 1.25rem;
+        line-height: 1.75rem;
+        padding: 4px;
+        opacity: 1;
     }
 </style>
